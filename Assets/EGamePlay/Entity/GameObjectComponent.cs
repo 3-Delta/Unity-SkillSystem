@@ -13,9 +13,12 @@ namespace EGamePlay
         {
             base.Setup();
             GameObject = new UnityEngine.GameObject(Entity.GetType().Name);
+            
+            // 为了Inspector查看
             var view = GameObject.AddComponent<ComponentView>();
             view.Type = GameObject.name;
             view.Component = this;
+            
             Entity.OnNameChangedAction = OnNameChanged;
             Entity.OnAddComponentAction = OnAddComponent;
             Entity.OnRemoveComponentAction = OnRemoveComponent;
