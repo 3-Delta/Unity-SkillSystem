@@ -1,46 +1,93 @@
 ﻿using System.Collections.Generic;
+using System;
+using Sirenix.Utilities;
 
 namespace EGamePlay.Combat
 {
     /// <summary>
     /// 浮点型修饰器
     /// </summary>
-    public class FloatModifier
+    public class NumericModifier<T> where T : struct
     {
-        public float Value;
+        public T Value { get; set; }
+    }
+
+    public class FloatModifier : NumericModifier<float> { }
+
+    public class NumericModifierCollection<T, TModifier> where T : struct// , TModifier NumericModifier<T> 
+    {
+        public T value { get; private set; }
+        private List<TModifier> modifierList = new List<TModifier>(0);
+
+        public void Reset() {
+            value = default;
+            modifierList.Clear();
+        }
+
+        public T AddModifier(TModifier modifier)
+        {
+            modifierList.Add(modifier);
+            AddValue(modifier);
+            return value;
+        }
+
+        public T RemoveModifier(TModifier modifier)
+        {
+            modifierList.Remove(modifier);
+            RemoveValue(modifier);
+            return value;
+        }
+
+        protected virtual void AddValue(TModifier modifier) {
+            
+        }
+        protected virtual void RemoveValue(TModifier modifier) {
+            
+        }
+
+        public virtual T Calc() {
+            foreach (var mod in modifierList) {
+                AddValue(mod);
+            }
+            return value;
+        }
+    }
+
+    public class FloatModifierCollection : NumericModifierCollection<float, FloatNumeric> {
+        
     }
 
     /// <summary>
     /// 浮点型修饰器集合
     /// </summary>
-    public class FloatModifierCollection
-    {
-        public float TotalValue { get; private set; }
-        private List<FloatModifier> Modifiers { get; } = new List<FloatModifier>();
-
-        public float AddModifier(FloatModifier modifier)
-        {
-            Modifiers.Add(modifier);
-            Update();
-            return TotalValue;
-        }
-
-        public float RemoveModifier(FloatModifier modifier)
-        {
-            Modifiers.Remove(modifier);
-            Update();
-            return TotalValue;
-        }
-
-        public void Update()
-        {
-            TotalValue = 0;
-            foreach (var item in Modifiers)
-            {
-                TotalValue += item.Value;
-            }
-        }
-    }
+    // public class FloatModifierCollection
+    // {
+    //     public float TotalValue { get; private set; }
+    //     private List<FloatModifier> Modifiers { get; } = new List<FloatModifier>();
+    //
+    //     public float AddModifier(FloatModifier modifier)
+    //     {
+    //         Modifiers.Add(modifier);
+    //         Update();
+    //         return TotalValue;
+    //     }
+    //
+    //     public float RemoveModifier(FloatModifier modifier)
+    //     {
+    //         Modifiers.Remove(modifier);
+    //         Update();
+    //         return TotalValue;
+    //     }
+    //
+    //     public void Update()
+    //     {
+    //         TotalValue = 0;
+    //         foreach (var item in Modifiers)
+    //         {
+    //             TotalValue += item.Value;
+    //         }
+    //     }
+    // }
     /// <summary>
     /// 浮点型数值
     /// </summary>
