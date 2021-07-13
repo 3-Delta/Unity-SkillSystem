@@ -6,12 +6,12 @@ using EGamePlay.Combat.Skill;
 using ET;
 
 namespace EGamePlay.Combat {
-    public class SpellActionAbility : ActionAbility<SpellAction> { }
+    public class SpellActionAbilityEntity : ActionAbilityEntity<SpellActionAbility> { }
 
     /// <summary>
     /// 施法行动
     /// </summary>
-    public class SpellAction : ActionExecution<SpellActionAbility> {
+    public class SpellActionAbility : ActionAbilityExecution<SpellActionAbilityEntity> {
         public SkillAbility SkillAbility { get; set; }
         public SkillExecution SkillExecution { get; set; }
         public List<CombatEntity> SkillTargets { get; set; } = new List<CombatEntity>();

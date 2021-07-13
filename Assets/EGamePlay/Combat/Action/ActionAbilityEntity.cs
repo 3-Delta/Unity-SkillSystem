@@ -9,7 +9,7 @@ namespace EGamePlay.Combat {
     /// <summary>
     /// 行动能力
     /// </summary>
-    public class ActionAbility : AbilityEntity {
+    public class ActionAbilityEntity : AbilityEntity {
         public AbilityExecution CreateAction() {
             return CreateExecution();
         }
@@ -34,7 +34,7 @@ namespace EGamePlay.Combat {
         }
     }
 
-    public class ActionAbility<T> : ActionAbility where T : ActionExecution {
+    public class ActionAbilityEntity<T> : ActionAbilityEntity where T : ActionAbilityExecution {
         public override AbilityExecution CreateExecution() {
             return OwnerEntity.CreateAction<T>();
         }

@@ -6,12 +6,12 @@ using EGamePlay.Combat;
 using ET;
 
 namespace EGamePlay.Combat {
-    public class TurnActionAbility : ActionAbility<TurnAction> { }
+    public class TurnActionAbilityEntity : ActionAbilityEntity<TurnActionAbility> { }
 
     /// <summary>
     /// 回合行动
     /// </summary>
-    public class TurnAction : ActionExecution<TurnActionAbility> {
+    public class TurnActionAbility : ActionAbilityExecution<TurnActionAbilityEntity> {
         public int TurnActionType { get; set; }
 
         //前置处理
@@ -20,7 +20,7 @@ namespace EGamePlay.Combat {
         public async ETTask ApplyTurn() {
             PreProcess();
 
-            if (Creator.JumpToActionAbility.TryCreateAction(out var jumpToAction)) {
+            if (Creator.JumpToActionAbilityEntity.TryCreateAction(out var jumpToAction)) {
                 jumpToAction.Target = Target;
                 await jumpToAction.ApplyJumpTo();
             }

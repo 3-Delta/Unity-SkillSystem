@@ -4,12 +4,12 @@ using UnityEngine;
 using EGamePlay;
 
 namespace EGamePlay.Combat {
-    public class MotionActionAbility : ActionAbility<MotionAction> { }
+    public class MotionActionAbilityEntity : ActionAbilityEntity<MotionActionAbility> { }
 
     /// <summary>
     /// 动作行动
     /// </summary>
-    public class MotionAction : ActionExecution<MotionActionAbility> {
+    public class MotionActionAbility : ActionAbilityExecution<MotionActionAbilityEntity> {
         public int MotionType { get; set; }
 
         //前置处理

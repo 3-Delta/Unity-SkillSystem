@@ -4,12 +4,12 @@ using UnityEngine;
 using EGamePlay;
 
 namespace EGamePlay.Combat {
-    public class CureActionAbility : ActionAbility<CureAction> { }
+    public class CureActionAbilityEntity : ActionAbilityEntity<CureActionAbility> { }
 
     /// <summary>
     /// 治疗行动
     /// </summary>
-    public class CureAction : ActionExecution<CureActionAbility> {
+    public class CureActionAbility : ActionAbilityExecution<CureActionAbilityEntity> {
         public CureEffect CureEffect { get; set; }
 
         //治疗数值

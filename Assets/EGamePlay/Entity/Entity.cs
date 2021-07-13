@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using GameUtils;
 
 namespace EGamePlay {
-    [System.AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     sealed class EnableUpdateAttribute : Attribute {
         public EnableUpdateAttribute() { }
     }
@@ -153,14 +150,14 @@ namespace EGamePlay {
         public virtual void OnDestroy() { }
 
         public void Dispose() {
-            if (Entity.EnableLog) Log.Debug($"{GetType().Name}->Dispose");
+            if (EnableLog) Log.Debug($"{GetType().Name}->Dispose");
             var childrenComponent = GetComponent<ChildrenComponent>();
             if (childrenComponent != null) {
                 var Children = childrenComponent.Children;
                 var Type2Children = childrenComponent.Type2Children;
                 if (Children.Count > 0) {
                     for (int i = Children.Count - 1; i >= 0; i--) {
-                        Entity.Destroy(Children[i]);
+                        Destroy(Children[i]);
                     }
 
                     Children.Clear();
@@ -194,7 +191,7 @@ namespace EGamePlay {
             component.Enable = true;
             this.Components.Add(typeof(T), component);
             Master.AllComponents.Add(component);
-            if (Entity.EnableLog) Log.Debug($"{GetType().Name}->AddComponent, {typeof(T).Name}");
+            if (EnableLog) Log.Debug($"{GetType().Name}->AddComponent, {typeof(T).Name}");
             component.Setup();
             OnAddComponentAction?.Invoke((component));
             return component;
@@ -207,7 +204,7 @@ namespace EGamePlay {
             component.Enable = true;
             this.Components.Add(typeof(T), component);
             Master.AllComponents.Add(component);
-            if (Entity.EnableLog) Log.Debug($"{GetType().Name}->AddComponent, {typeof(T).Name} initData={initData}");
+            if (EnableLog) Log.Debug($"{GetType().Name}->AddComponent, {typeof(T).Name} initData={initData}");
             component.Setup(initData);
             OnAddComponentAction?.Invoke((component));
             return component;

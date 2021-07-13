@@ -6,9 +6,9 @@ using EGamePlay.Combat;
 using ET;
 
 namespace EGamePlay.Combat {
-    public class JumpToActionAbility : ActionAbility<JumpToAction> { }
+    public class JumpToActionAbilityEntity : ActionAbilityEntity<JumpToActionAbility> { }
 
-    public class JumpToAction : ActionExecution<JumpToActionAbility> {
+    public class JumpToActionAbility : ActionAbilityExecution<JumpToActionAbilityEntity> {
         //前置处理
         private void PreProcess() {
             Creator.TriggerActionPoint(ActionPointType.PreJumpTo, this);
@@ -21,7 +21,7 @@ namespace EGamePlay.Combat {
 
             PostProcess();
 
-            if (Creator.AttackActionAbility.TryCreateAction(out var attackAction)) {
+            if (Creator.AttackActionAbilityEntity.TryCreateAction(out var attackAction)) {
                 attackAction.Target = Target;
                 await attackAction.ApplyAttackAwait();
             }

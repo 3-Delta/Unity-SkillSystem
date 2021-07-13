@@ -4,19 +4,13 @@ using UnityEngine;
 using EGamePlay.Combat.Ability;
 using Sirenix.OdinInspector;
 
-namespace EGamePlay.Combat
-{
+namespace EGamePlay.Combat {
     [LabelText("行动类型")]
-    public enum ActionType
-    {
-        [LabelText("施放技能")]
-        SpellSkill,
-        [LabelText("造成伤害")]
-        CauseDamage,
-        [LabelText("给予治疗")]
-        GiveCure,
-        [LabelText("赋给效果")]
-        AssignEffect,
+    public enum ActionType {
+        [LabelText("施放技能")] SpellSkill,
+        [LabelText("造成伤害")] CauseDamage,
+        [LabelText("给予治疗")] GiveCure,
+        [LabelText("赋给效果")] AssignEffect,
     }
 
     /// <summary>
@@ -25,21 +19,17 @@ namespace EGamePlay.Combat
     /// <remarks>
     /// 战斗行动由战斗实体主动发起，包含本次行动所需要用到的所有数据，并且会触发一系列行动点事件 <see cref="ActionPoint"/>
     /// </remarks>
-    public abstract class ActionExecution : AbilityExecution
-    {
+    public abstract class ActionAbilityExecution : AbilityExecution {
         public ActionType ActionType { get; set; }
         public CombatEntity Creator { get; set; }
         public CombatEntity Target { get; set; }
 
-
-        public virtual void ApplyAction()
-        {
+        public virtual void ApplyAction() {
             EndExecute();
         }
     }
 
-    public abstract class ActionExecution<T> : ActionExecution where T : AbilityEntity
-    {
+    public abstract class ActionAbilityExecution<T> : ActionAbilityExecution where T : AbilityEntity {
         public T ActionAbility { get; set; }
     }
 }

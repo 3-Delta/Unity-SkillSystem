@@ -5,13 +5,13 @@ namespace EGamePlay.Combat {
     /// 普攻执行体
     /// </summary>
     public class AttackExecution : AbilityExecution {
-        public AttackAction AttackAction { get; set; }
+        public AttackActionAbility AttackActionAbility { get; set; }
 
         public override void Update() { }
 
         public override void BeginExecute() {
-            if (OwnerEntity.DamageActionAbility.TryCreateAction(out var action)) {
-                action.Target = AttackAction.Target;
+            if (OwnerEntity.DamageActionAbilityEntity.TryCreateAction(out var action)) {
+                action.Target = AttackActionAbility.Target;
                 action.DamageSource = DamageSource.Attack;
                 action.ApplyDamage();
             }
@@ -21,7 +21,7 @@ namespace EGamePlay.Combat {
 
         public override void EndExecute() {
             base.EndExecute();
-            AttackAction = null;
+            AttackActionAbility = null;
         }
     }
 }

@@ -49,7 +49,6 @@ namespace Framework {
         }
 
         #region Tuple
-
         public void Invoke<TArg1, TArg2, TArg3, TArg4, TArg5>(Tuple<TArg1, TArg2, TArg3, TArg4, TArg5> arg) {
             for (int i = ls.Count - 1; i >= 0; i--) {
                 (ls[i] as Action<Tuple<TArg1, TArg2, TArg3, TArg4, TArg5>>)?.Invoke(arg);
@@ -61,7 +60,6 @@ namespace Framework {
                 (ls[i] as Action<ITuple>)?.Invoke(arg);
             }
         }
-
         #endregion
 
         public void Clear() {
@@ -130,7 +128,6 @@ namespace Framework {
         }
 
         #region Tuple
-
         public void Register(TEnum eventType, Action<ITuple> action, bool toReigster) {
             _Register(eventType, action, toReigster);
         }
@@ -152,7 +149,6 @@ namespace Framework {
             Action<Tuple<TArg1, TArg2, TArg3, TArg4, TArg5>> action, bool toReigster) {
             _Register(eventType, action, toReigster);
         }
-
         #endregion
 
         public void Clear() {

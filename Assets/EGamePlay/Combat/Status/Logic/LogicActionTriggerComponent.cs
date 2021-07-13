@@ -13,7 +13,7 @@ namespace EGamePlay.Combat.Status {
             GetEntity<LogicEntity>().GetParent<StatusAbility>().OwnerEntity.ListenActionPoint(actionPointType, OnActionPointTrigger);
         }
 
-        private void OnActionPointTrigger(ActionExecution combatAction) {
+        private void OnActionPointTrigger(ActionAbilityExecution combatActionAbility) {
             GetEntity<LogicEntity>().ApplyEffect();
         }
     }

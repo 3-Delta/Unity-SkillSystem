@@ -6,10 +6,10 @@ using Sirenix.OdinInspector;
 
 namespace EGamePlay.Combat {
     /// <summary>
-    /// 行动点，一次战斗行动<see cref="ActionExecution"/>会触发战斗实体一系列的行动点
+    /// 行动点，一次战斗行动<see cref="ActionAbilityExecution"/>会触发战斗实体一系列的行动点
     /// </summary>
     public sealed class ActionPoint {
-        public List<Action<ActionExecution>> Listeners { get; set; } = new List<Action<ActionExecution>>();
+        public List<Action<ActionAbilityExecution>> Listeners { get; set; } = new List<Action<ActionAbilityExecution>>();
     }
 
     [Flags]
@@ -56,7 +56,7 @@ namespace EGamePlay.Combat {
             base.Setup();
         }
 
-        public void AddListener(ActionPointType actionPointType, Action<ActionExecution> action) {
+        public void AddListener(ActionPointType actionPointType, Action<ActionAbilityExecution> action) {
             if (!ActionPoints.ContainsKey(actionPointType)) {
                 ActionPoints.Add(actionPointType, new ActionPoint());
             }
@@ -64,17 +64,17 @@ namespace EGamePlay.Combat {
             ActionPoints[actionPointType].Listeners.Add(action);
         }
 
-        public void RemoveListener(ActionPointType actionPointType, Action<ActionExecution> action) {
+        public void RemoveListener(ActionPointType actionPointType, Action<ActionAbilityExecution> action) {
             if (ActionPoints.ContainsKey(actionPointType)) {
                 ActionPoints[actionPointType].Listeners.Remove(action);
             }
         }
 
-        public void TriggerActionPoint(ActionPointType actionPointType, ActionExecution action) {
+        public void TriggerActionPoint(ActionPointType actionPointType, ActionAbilityExecution actionAbility) {
             if (ActionPoints.ContainsKey(actionPointType) && ActionPoints[actionPointType].Listeners.Count > 0) {
                 for (int i = ActionPoints[actionPointType].Listeners.Count - 1; i >= 0; i--) {
                     var item = ActionPoints[actionPointType].Listeners[i];
-                    item.Invoke(action);
+                    item.Invoke(actionAbility);
                 }
             }
         }

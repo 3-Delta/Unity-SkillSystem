@@ -7,12 +7,12 @@ using EGamePlay.Combat.Status;
 using EGamePlay.Combat.Skill;
 
 namespace EGamePlay.Combat {
-    public class AssignEffectActionAbility : ActionAbility<AssignEffectAction> { }
+    public class AssignEffectActionAbilityEntity : ActionAbilityEntity<AssignEffectActionAbility> { }
 
     /// <summary>
     /// ����Ч���ж�
     /// </summary>
-    public class AssignEffectAction : ActionExecution<AssignEffectActionAbility> {
+    public class AssignEffectActionAbility : ActionAbilityExecution<AssignEffectActionAbilityEntity> {
         //�����������Ч���ж���Դ����
         public AbilityEntity SourceAbility { get; set; }
         public Effect Effect { get; set; }

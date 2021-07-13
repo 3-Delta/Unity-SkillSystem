@@ -7,12 +7,12 @@ using B83.ExpressionParser;
 using GameUtils;
 
 namespace EGamePlay.Combat {
-    public class DamageActionAbility : ActionAbility<DamageAction> { }
+    public class DamageActionAbilityEntity : ActionAbilityEntity<DamageActionAbility> { }
 
     /// <summary>
     /// 伤害行动
     /// </summary>
-    public class DamageAction : ActionExecution<DamageActionAbility> {
+    public class DamageActionAbility : ActionAbilityExecution<DamageActionAbilityEntity> {
         public DamageEffect DamageEffect { get; set; }
 
         //伤害来源
