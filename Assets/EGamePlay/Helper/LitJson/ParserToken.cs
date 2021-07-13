@@ -8,11 +8,8 @@
  **/
 #endregion
 
-
-namespace LitJson
-{
-    internal enum ParserToken
-    {
+namespace LitJson {
+    internal enum ParserToken {
         // Lexer tokens (see section A.1.1. of the manual)
         None = System.Char.MaxValue + 1,
         Number,
@@ -20,6 +17,7 @@ namespace LitJson
         False,
         Null,
         CharSeq,
+
         // Single char
         Char,
 

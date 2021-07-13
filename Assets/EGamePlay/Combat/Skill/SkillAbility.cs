@@ -6,10 +6,8 @@ using ET;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EGamePlay.Combat.Skill
-{
-    public class SkillAbility : AbilityEntity
-    {
+namespace EGamePlay.Combat.Skill {
+    public class SkillAbility : AbilityEntity {
 #if EGAMEPLAY_EXCEL
         public SkillConfig SkillConfig { get; set; }
 #else
@@ -19,9 +17,7 @@ namespace EGamePlay.Combat.Skill
         public GameTimer CooldownTimer { get; } = new GameTimer(1f);
         private List<StatusAbility> ChildrenStatuses { get; set; } = new List<StatusAbility>();
 
-
-        public override void Awake(object initData)
-        {
+        public override void Awake(object initData) {
             base.Awake(initData);
 #if EGAMEPLAY_EXCEL
             SkillConfig = initData as SkillConfig;
@@ -37,23 +33,19 @@ namespace EGamePlay.Combat.Skill
             }
 #else
             SkillConfig = initData as SkillConfigObject;
-            if (SkillConfig.SkillSpellType == SkillSpellType.Passive)
-            {
+            if (SkillConfig.SkillSpellType == SkillSpellType.Passive) {
                 TryActivateAbility();
             }
 #endif
         }
 
-        public override void ActivateAbility()
-        {
+        public override void ActivateAbility() {
             base.ActivateAbility();
 
 #if !EGAMEPLAY_EXCEL
             //子状态效果
-            if (SkillConfig.EnableChildrenStatuses)
-            {
-                foreach (var item in SkillConfig.ChildrenStatuses)
-                {
+            if (SkillConfig.EnableChildrenStatuses) {
+                foreach (var item in SkillConfig.ChildrenStatuses) {
                     var status = OwnerEntity.AttachStatus<StatusAbility>(item.StatusConfigObject);
                     status.Caster = OwnerEntity;
                     status.IsChildStatus = true;
@@ -65,32 +57,28 @@ namespace EGamePlay.Combat.Skill
 #endif
         }
 
-        public override void EndAbility()
-        {
+        public override void EndAbility() {
             base.EndAbility();
 
 #if !EGAMEPLAY_EXCEL
             //子状态效果
-            if (SkillConfig.EnableChildrenStatuses)
-            {
-                foreach (var item in ChildrenStatuses)
-                {
+            if (SkillConfig.EnableChildrenStatuses) {
+                foreach (var item in ChildrenStatuses) {
                     item.EndAbility();
                 }
+
                 ChildrenStatuses.Clear();
             }
 #endif
         }
 
-        public override AbilityExecution CreateExecution()
-        {
+        public override AbilityExecution CreateExecution() {
             var execution = Entity.CreateWithParent<SkillExecution>(OwnerEntity, this);
             execution.AddComponent<UpdateComponent>();
             return execution;
         }
 
-        public override void ApplyAbilityEffectsTo(CombatEntity targetEntity)
-        {
+        public override void ApplyAbilityEffectsTo(CombatEntity targetEntity) {
             List<Effect> Effects = null;
 #if EGAMEPLAY_EXCEL
             Effects = new List<Effect>();
@@ -106,8 +94,7 @@ namespace EGamePlay.Combat.Skill
 #endif
             if (Effects == null)
                 return;
-            foreach (var effectItem in Effects)
-            {
+            foreach (var effectItem in Effects) {
                 ApplyEffectTo(targetEntity, effectItem);
             }
         }

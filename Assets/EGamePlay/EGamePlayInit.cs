@@ -5,16 +5,11 @@ using System.Threading;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-
-
-public class EGamePlayInit : SerializedMonoBehaviour
-{
+public class EGamePlayInit : SerializedMonoBehaviour {
     public static EGamePlayInit Instance { get; private set; }
     public ReferenceCollector ConfigsCollector;
 
-
-    private void Awake()
-    {
+    private void Awake() {
         Instance = this;
         SynchronizationContext.SetSynchronizationContext(ThreadSynchronizationContext.Instance);
         MasterEntity.Create();
@@ -23,15 +18,13 @@ public class EGamePlayInit : SerializedMonoBehaviour
         MasterEntity.Instance.AddComponent<ConfigManageComponent>(ConfigsCollector);
     }
 
-    private void Update()
-    {
+    private void Update() {
         ThreadSynchronizationContext.Instance.Update();
         MasterEntity.Instance.Update();
         TimerComponent.Instance.Update();
     }
 
-    private void OnApplicationQuit()
-    {
+    private void OnApplicationQuit() {
         Entity.Destroy(MasterEntity.Instance);
         MasterEntity.Destroy();
     }

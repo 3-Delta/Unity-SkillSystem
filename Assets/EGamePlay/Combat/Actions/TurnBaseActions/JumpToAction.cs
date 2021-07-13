@@ -5,31 +5,23 @@ using EGamePlay;
 using EGamePlay.Combat;
 using ET;
 
-namespace EGamePlay.Combat
-{
-    public class JumpToActionAbility : ActionAbility<JumpToAction>
-    {
+namespace EGamePlay.Combat {
+    public class JumpToActionAbility : ActionAbility<JumpToAction> { }
 
-    }
-
-    public class JumpToAction : ActionExecution<JumpToActionAbility>
-    {
+    public class JumpToAction : ActionExecution<JumpToActionAbility> {
         //前置处理
-        private void PreProcess()
-        {
+        private void PreProcess() {
             Creator.TriggerActionPoint(ActionPointType.PreJumpTo, this);
         }
 
-        public async ETTask ApplyJumpTo()
-        {
+        public async ETTask ApplyJumpTo() {
             PreProcess();
 
             await TimeHelper.WaitAsync(Creator.JumpToTime);
 
             PostProcess();
 
-            if (Creator.AttackActionAbility.TryCreateAction(out var attackAction))
-            {
+            if (Creator.AttackActionAbility.TryCreateAction(out var attackAction)) {
                 attackAction.Target = Target;
                 await attackAction.ApplyAttackAwait();
             }
@@ -38,8 +30,7 @@ namespace EGamePlay.Combat
         }
 
         //后置处理
-        private void PostProcess()
-        {
+        private void PostProcess() {
             Creator.TriggerActionPoint(ActionPointType.PostJumpTo, this);
         }
     }

@@ -2,10 +2,8 @@
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace ET
-{
-    public class ThreadSynchronizationContext : SynchronizationContext
-    {
+namespace ET {
+    public class ThreadSynchronizationContext : SynchronizationContext {
         public static ThreadSynchronizationContext Instance { get; } = new ThreadSynchronizationContext(Thread.CurrentThread.ManagedThreadId);
 
         private readonly int threadId;
@@ -15,46 +13,35 @@ namespace ET
 
         private Action a;
 
-        public ThreadSynchronizationContext(int threadId)
-        {
+        public ThreadSynchronizationContext(int threadId) {
             this.threadId = threadId;
         }
 
-        public void Update()
-        {
-            while (true)
-            {
-                if (!this.queue.TryDequeue(out a))
-                {
+        public void Update() {
+            while (true) {
+                if (!this.queue.TryDequeue(out a)) {
                     return;
                 }
 
-                try
-                {
+                try {
                     a();
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     Log.Error(e);
                 }
             }
         }
 
-        public override void Post(SendOrPostCallback callback, object state)
-        {
+        public override void Post(SendOrPostCallback callback, object state) {
             this.Post(() => callback(state));
         }
-		
-        public void Post(Action action)
-        {
-            if (Thread.CurrentThread.ManagedThreadId == this.threadId)
-            {
-                try
-                {
+
+        public void Post(Action action) {
+            if (Thread.CurrentThread.ManagedThreadId == this.threadId) {
+                try {
                     action();
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     Log.Error(ex);
                 }
 
@@ -63,9 +50,8 @@ namespace ET
 
             this.queue.Enqueue(action);
         }
-		
-        public void PostNext(Action action)
-        {
+
+        public void PostNext(Action action) {
             this.queue.Enqueue(action);
         }
     }

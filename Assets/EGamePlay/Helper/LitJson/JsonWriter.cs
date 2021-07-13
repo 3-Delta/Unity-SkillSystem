@@ -8,18 +8,14 @@
  **/
 #endregion
 
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-
-namespace LitJson
-{
-    internal enum Condition
-    {
+namespace LitJson {
+    internal enum Condition {
         InArray,
         InObject,
         NotAProperty,
@@ -27,33 +23,30 @@ namespace LitJson
         Value
     }
 
-    internal class WriterContext
-    {
-        public int  Count;
+    internal class WriterContext {
+        public int Count;
         public bool InArray;
         public bool InObject;
         public bool ExpectingValue;
-        public int  Padding;
+        public int Padding;
     }
 
-    public class JsonWriter
-    {
+    public class JsonWriter {
         #region Fields
         private static readonly NumberFormatInfo number_format;
 
-        private WriterContext        context;
+        private WriterContext context;
         private Stack<WriterContext> ctx_stack;
-        private bool                 has_reached_end;
-        private char[]               hex_seq;
-        private int                  indentation;
-        private int                  indent_value;
-        private StringBuilder        inst_string_builder;
-        private bool                 pretty_print;
-        private bool                 validate;
-        private bool                 lower_case_properties;
-        private TextWriter           writer;
+        private bool has_reached_end;
+        private char[] hex_seq;
+        private int indentation;
+        private int indent_value;
+        private StringBuilder inst_string_builder;
+        private bool pretty_print;
+        private bool validate;
+        private bool lower_case_properties;
+        private TextWriter writer;
         #endregion
-
 
         #region Properties
         public int IndentValue {
@@ -84,88 +77,79 @@ namespace LitJson
         }
         #endregion
 
-
         #region Constructors
-        static JsonWriter ()
-        {
+        static JsonWriter() {
             number_format = NumberFormatInfo.InvariantInfo;
         }
 
-        public JsonWriter ()
-        {
-            inst_string_builder = new StringBuilder ();
-            writer = new StringWriter (inst_string_builder);
+        public JsonWriter() {
+            inst_string_builder = new StringBuilder();
+            writer = new StringWriter(inst_string_builder);
 
-            Init ();
+            Init();
         }
 
-        public JsonWriter (StringBuilder sb) :
-            this (new StringWriter (sb))
-        {
-        }
+        public JsonWriter(StringBuilder sb) :
+            this(new StringWriter(sb)) { }
 
-        public JsonWriter (TextWriter writer)
-        {
+        public JsonWriter(TextWriter writer) {
             if (writer == null)
-                throw new ArgumentNullException ("writer");
+                throw new ArgumentNullException("writer");
 
             this.writer = writer;
 
-            Init ();
+            Init();
         }
         #endregion
 
-
         #region Private Methods
-        private void DoValidation (Condition cond)
-        {
-            if (! context.ExpectingValue)
+        private void DoValidation(Condition cond) {
+            if (!context.ExpectingValue)
                 context.Count++;
 
-            if (! validate)
+            if (!validate)
                 return;
 
             if (has_reached_end)
-                throw new JsonException (
+                throw new JsonException(
                     "A complete JSON symbol has already been written");
 
             switch (cond) {
-            case Condition.InArray:
-                if (! context.InArray)
-                    throw new JsonException (
-                        "Can't close an array here");
-                break;
+                case Condition.InArray:
+                    if (!context.InArray)
+                        throw new JsonException(
+                            "Can't close an array here");
+                    break;
 
-            case Condition.InObject:
-                if (! context.InObject || context.ExpectingValue)
-                    throw new JsonException (
-                        "Can't close an object here");
-                break;
+                case Condition.InObject:
+                    if (!context.InObject || context.ExpectingValue)
+                        throw new JsonException(
+                            "Can't close an object here");
+                    break;
 
-            case Condition.NotAProperty:
-                if (context.InObject && ! context.ExpectingValue)
-                    throw new JsonException (
-                        "Expected a property");
-                break;
+                case Condition.NotAProperty:
+                    if (context.InObject && !context.ExpectingValue)
+                        throw new JsonException(
+                            "Expected a property");
+                    break;
 
-            case Condition.Property:
-                if (! context.InObject || context.ExpectingValue)
-                    throw new JsonException (
-                        "Can't add a property here");
-                break;
+                case Condition.Property:
+                    if (!context.InObject || context.ExpectingValue)
+                        throw new JsonException(
+                            "Can't add a property here");
+                    break;
 
-            case Condition.Value:
-                if (! context.InArray &&
-                    (! context.InObject || ! context.ExpectingValue))
-                    throw new JsonException (
-                        "Can't add a value here");
+                case Condition.Value:
+                    if (!context.InArray &&
+                        (!context.InObject || !context.ExpectingValue))
+                        throw new JsonException(
+                            "Can't add a value here");
 
-                break;
+                    break;
             }
         }
 
-        private void Init ()
-        {
+        private void Init() {
             has_reached_end = false;
             hex_seq = new char[4];
             indentation = 0;
@@ -174,13 +158,12 @@ namespace LitJson
             validate = true;
             lower_case_properties = false;
 
-            ctx_stack = new Stack<WriterContext> ();
-            context = new WriterContext ();
-            ctx_stack.Push (context);
+            ctx_stack = new Stack<WriterContext>();
+            context = new WriterContext();
+            ctx_stack.Push(context);
         }
 
-        private static void IntToHex (int n, char[] hex)
-        {
+        private static void IntToHex(int n, char[] hex) {
             int num;
 
             for (int i = 0; i < 4; i++) {
@@ -195,42 +178,36 @@ namespace LitJson
             }
         }
 
-        private void Indent ()
-        {
+        private void Indent() {
             if (pretty_print)
                 indentation += indent_value;
         }
 
-
-        private void Put (string str)
-        {
-            if (pretty_print && ! context.ExpectingValue)
+        private void Put(string str) {
+            if (pretty_print && !context.ExpectingValue)
                 for (int i = 0; i < indentation; i++)
-                    writer.Write (' ');
+                    writer.Write(' ');
 
-            writer.Write (str);
+            writer.Write(str);
         }
 
-        private void PutNewline ()
-        {
-            PutNewline (true);
+        private void PutNewline() {
+            PutNewline(true);
         }
 
-        private void PutNewline (bool add_comma)
-        {
-            if (add_comma && ! context.ExpectingValue &&
+        private void PutNewline(bool add_comma) {
+            if (add_comma && !context.ExpectingValue &&
                 context.Count > 1)
-                writer.Write (',');
+                writer.Write(',');
 
-            if (pretty_print && ! context.ExpectingValue)
-                writer.Write (Environment.NewLine);
+            if (pretty_print && !context.ExpectingValue)
+                writer.Write(Environment.NewLine);
         }
 
-        private void PutString (string str)
-        {
-            Put (String.Empty);
+        private void PutString(string str) {
+            Put(String.Empty);
 
-            writer.Write ('"');
+            writer.Write('"');
             writer.Write(str);
             writer.Write('"');
             return;
@@ -280,71 +257,63 @@ namespace LitJson
 */
         }
 
-        private void Unindent ()
-        {
+        private void Unindent() {
             if (pretty_print)
                 indentation -= indent_value;
         }
         #endregion
 
-
-        public override string ToString ()
-        {
+        public override string ToString() {
             if (inst_string_builder == null)
                 return String.Empty;
 
-            return inst_string_builder.ToString ();
+            return inst_string_builder.ToString();
         }
 
-        public void Reset ()
-        {
+        public void Reset() {
             has_reached_end = false;
 
-            ctx_stack.Clear ();
-            context = new WriterContext ();
-            ctx_stack.Push (context);
+            ctx_stack.Clear();
+            context = new WriterContext();
+            ctx_stack.Push(context);
 
             if (inst_string_builder != null)
-                inst_string_builder.Remove (0, inst_string_builder.Length);
+                inst_string_builder.Remove(0, inst_string_builder.Length);
         }
 
-        public void Write (bool boolean)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
+        public void Write(bool boolean) {
+            DoValidation(Condition.Value);
+            PutNewline();
 
-            Put (boolean ? "true" : "false");
+            Put(boolean ? "true" : "false");
 
             context.ExpectingValue = false;
         }
 
-        public void Write (decimal number)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
+        public void Write(decimal number) {
+            DoValidation(Condition.Value);
+            PutNewline();
 
-            Put (Convert.ToString (number, number_format));
-
-            context.ExpectingValue = false;
-        }
-
-        public void Write (double number)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
-
-            string str = Convert.ToString (number, number_format);
-            Put (str);
-
-            if (str.IndexOf ('.') == -1 &&
-                str.IndexOf ('E') == -1)
-                writer.Write (".0");
+            Put(Convert.ToString(number, number_format));
 
             context.ExpectingValue = false;
         }
 
-        public void Write(float number)
-        {
+        public void Write(double number) {
+            DoValidation(Condition.Value);
+            PutNewline();
+
+            string str = Convert.ToString(number, number_format);
+            Put(str);
+
+            if (str.IndexOf('.') == -1 &&
+                str.IndexOf('E') == -1)
+                writer.Write(".0");
+
+            context.ExpectingValue = false;
+        }
+
+        public void Write(float number) {
             DoValidation(Condition.Value);
             PutNewline();
 
@@ -354,132 +323,125 @@ namespace LitJson
             context.ExpectingValue = false;
         }
 
-        public void Write (int number)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
+        public void Write(int number) {
+            DoValidation(Condition.Value);
+            PutNewline();
 
-            Put (Convert.ToString (number, number_format));
-
-            context.ExpectingValue = false;
-        }
-
-        public void Write (long number)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
-
-            Put (Convert.ToString (number, number_format));
+            Put(Convert.ToString(number, number_format));
 
             context.ExpectingValue = false;
         }
 
-        public void Write (string str)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
+        public void Write(long number) {
+            DoValidation(Condition.Value);
+            PutNewline();
+
+            Put(Convert.ToString(number, number_format));
+
+            context.ExpectingValue = false;
+        }
+
+        public void Write(string str) {
+            DoValidation(Condition.Value);
+            PutNewline();
 
             if (str == null)
-                Put ("null");
+                Put("null");
             else
-                PutString (str);
+                PutString(str);
 
             context.ExpectingValue = false;
         }
 
-        public void Write (ulong number)
-        {
-            DoValidation (Condition.Value);
-            PutNewline ();
+        public void Write(ulong number) {
+            DoValidation(Condition.Value);
+            PutNewline();
 
-            Put (Convert.ToString (number, number_format));
+            Put(Convert.ToString(number, number_format));
 
             context.ExpectingValue = false;
         }
 
-        public void WriteArrayEnd ()
-        {
-            DoValidation (Condition.InArray);
-            PutNewline (false);
+        public void WriteArrayEnd() {
+            DoValidation(Condition.InArray);
+            PutNewline(false);
 
-            ctx_stack.Pop ();
+            ctx_stack.Pop();
             if (ctx_stack.Count == 1)
                 has_reached_end = true;
             else {
-                context = ctx_stack.Peek ();
+                context = ctx_stack.Peek();
                 context.ExpectingValue = false;
             }
 
-            Unindent ();
-            Put ("]");
+            Unindent();
+            Put("]");
         }
 
-        public void WriteArrayStart ()
-        {
-            DoValidation (Condition.NotAProperty);
-            PutNewline ();
+        public void WriteArrayStart() {
+            DoValidation(Condition.NotAProperty);
+            PutNewline();
 
-            Put ("[");
+            Put("[");
 
-            context = new WriterContext ();
+            context = new WriterContext();
             context.InArray = true;
-            ctx_stack.Push (context);
+            ctx_stack.Push(context);
 
-            Indent ();
+            Indent();
         }
 
-        public void WriteObjectEnd ()
-        {
-            DoValidation (Condition.InObject);
-            PutNewline (false);
+        public void WriteObjectEnd() {
+            DoValidation(Condition.InObject);
+            PutNewline(false);
 
-            ctx_stack.Pop ();
+            ctx_stack.Pop();
             if (ctx_stack.Count == 1)
                 has_reached_end = true;
             else {
-                context = ctx_stack.Peek ();
+                context = ctx_stack.Peek();
                 context.ExpectingValue = false;
             }
 
-            Unindent ();
-            Put ("}");
+            Unindent();
+            Put("}");
         }
 
-        public void WriteObjectStart ()
-        {
-            DoValidation (Condition.NotAProperty);
-            PutNewline ();
+        public void WriteObjectStart() {
+            DoValidation(Condition.NotAProperty);
+            PutNewline();
 
-            Put ("{");
+            Put("{");
 
-            context = new WriterContext ();
+            context = new WriterContext();
             context.InObject = true;
-            ctx_stack.Push (context);
+            ctx_stack.Push(context);
 
-            Indent ();
+            Indent();
         }
 
-        public void WritePropertyName (string property_name)
-        {
-            DoValidation (Condition.Property);
-            PutNewline ();
+        public void WritePropertyName(string property_name) {
+            DoValidation(Condition.Property);
+            PutNewline();
             string propertyName = (property_name == null || !lower_case_properties)
                 ? property_name
                 : property_name.ToLowerInvariant();
 
-            PutString (propertyName);
+            PutString(propertyName);
 
             if (pretty_print) {
                 if (propertyName.Length > context.Padding)
                     context.Padding = propertyName.Length;
 
                 for (int i = context.Padding - propertyName.Length;
-                     i >= 0; i--)
-                    writer.Write (' ');
+                    i >= 0;
+                    i--)
+                    writer.Write(' ');
 
-                writer.Write (": ");
-            } else
-                writer.Write (':');
+                writer.Write(": ");
+            }
+            else
+                writer.Write(':');
 
             context.ExpectingValue = true;
         }

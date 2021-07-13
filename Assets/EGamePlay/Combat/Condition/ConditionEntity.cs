@@ -1,8 +1,3 @@
-﻿
-namespace EGamePlay.Combat
-{
-    public abstract class ConditionEntity : Entity
-    {
-
-    }
+﻿namespace EGamePlay.Combat {
+    public abstract class ConditionEntity : Entity { }
 }

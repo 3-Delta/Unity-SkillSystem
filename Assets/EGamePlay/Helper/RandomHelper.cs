@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace GameUtils
-{
-    public static class RandomHelper
-    {
+namespace GameUtils {
+    public static class RandomHelper {
         private static readonly Random random = new Random();
 
         /// <summary>
@@ -12,14 +10,12 @@ namespace GameUtils
         /// <param name="lower"></param>
         /// <param name="upper"></param>
         /// <returns></returns>
-        public static int RandomNumber(int lower, int upper)
-        {
+        public static int RandomNumber(int lower, int upper) {
             int value = random.Next(lower, upper);
             return value;
         }
 
-        public static int RandomRate()
-        {
+        public static int RandomRate() {
             int value = random.Next(1, 101);
             return value;
         }

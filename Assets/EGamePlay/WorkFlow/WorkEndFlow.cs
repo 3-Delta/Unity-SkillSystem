@@ -1,8 +1,3 @@
-﻿
-public class WorkEndFlow : WorkFlow
-{
-    public override void Awake()
-    {
-
-    }
+﻿public class WorkEndFlow : WorkFlow {
+    public override void Awake() { }
 }

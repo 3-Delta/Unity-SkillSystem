@@ -2,37 +2,33 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-namespace GameUtils
-{
-    public static class GenericTypeHelper
-    {
+namespace GameUtils {
+    public static class GenericTypeHelper {
         /// <summary>
-        /// ÅĞ¶ÏÖ¸¶¨µÄÀàĞÍ <paramref name="type"/> ÊÇ·ñÊÇÖ¸¶¨·ºĞÍÀàĞÍµÄ×ÓÀàĞÍ£¬»òÊµÏÖÁËÖ¸¶¨·ºĞÍ½Ó¿Ú¡£
+        /// åˆ¤æ–­æŒ‡å®šçš„ç±»å‹ <paramref name="type"/> æ˜¯å¦æ˜¯æŒ‡å®šæ³›å‹ç±»å‹çš„å­ç±»å‹ï¼Œæˆ–å®ç°äº†æŒ‡å®šæ³›å‹æ¥å£ã€‚
         /// </summary>
-        /// <param name="type">ĞèÒª²âÊÔµÄÀàĞÍ¡£</param>
-        /// <param name="generic">·ºĞÍ½Ó¿ÚÀàĞÍ£¬´«Èë typeof(IXxx&lt;&gt;)</param>
-        /// <returns>Èç¹ûÊÇ·ºĞÍ½Ó¿ÚµÄ×ÓÀàĞÍ£¬Ôò·µ»Ø true£¬·ñÔò·µ»Ø false¡£</returns>
-        public static bool HasImplementedRawGeneric(this Type type, Type generic)
-        {
+        /// <param name="type">éœ€è¦æµ‹è¯•çš„ç±»å‹ã€‚</param>
+        /// <param name="generic">æ³›å‹æ¥å£ç±»å‹ï¼Œä¼ å…¥ typeof(IXxx&lt;&gt;)</param>
+        /// <returns>å¦‚æœæ˜¯æ³›å‹æ¥å£çš„å­ç±»å‹ï¼Œåˆ™è¿”å› trueï¼Œå¦åˆ™è¿”å› falseã€‚</returns>
+        public static bool HasImplementedRawGeneric(this Type type, Type generic) {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (generic == null) throw new ArgumentNullException(nameof(generic));
 
-            // ²âÊÔ½Ó¿Ú¡£
+            // æµ‹è¯•æ¥å£ã€‚
             var isTheRawGenericType = type.GetInterfaces().Any(IsTheRawGenericType);
             if (isTheRawGenericType) return true;
 
-            // ²âÊÔÀàĞÍ¡£
-            while (type != null && type != typeof(object))
-            {
+            // æµ‹è¯•ç±»å‹ã€‚
+            while (type != null && type != typeof(object)) {
                 isTheRawGenericType = IsTheRawGenericType(type);
                 if (isTheRawGenericType) return true;
                 type = type.BaseType;
             }
 
-            // Ã»ÓĞÕÒµ½ÈÎºÎÆ¥ÅäµÄ½Ó¿Ú»òÀàĞÍ¡£
+            // æ²¡æœ‰æ‰¾åˆ°ä»»ä½•åŒ¹é…çš„æ¥å£æˆ–ç±»å‹ã€‚
             return false;
 
-            // ²âÊÔÄ³¸öÀàĞÍÊÇ·ñÊÇÖ¸¶¨µÄÔ­Ê¼½Ó¿Ú¡£
+            // æµ‹è¯•æŸä¸ªç±»å‹æ˜¯å¦æ˜¯æŒ‡å®šçš„åŸå§‹æ¥å£ã€‚
             bool IsTheRawGenericType(Type test)
                 => generic == (test.IsGenericType ? test.GetGenericTypeDefinition() : test);
         }

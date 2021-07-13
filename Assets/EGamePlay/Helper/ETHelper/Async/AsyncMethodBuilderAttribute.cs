@@ -1,15 +1,9 @@
-﻿namespace System.Runtime.CompilerServices
-{
+﻿namespace System.Runtime.CompilerServices {
 #if !NOT_CLIENT
-    public sealed class AsyncMethodBuilderAttribute: Attribute
-    {
-        public Type BuilderType
-        {
-            get;
-        }
+    public sealed class AsyncMethodBuilderAttribute : Attribute {
+        public Type BuilderType { get; }
 
-        public AsyncMethodBuilderAttribute(Type builderType)
-        {
+        public AsyncMethodBuilderAttribute(Type builderType) {
             BuilderType = builderType;
         }
     }

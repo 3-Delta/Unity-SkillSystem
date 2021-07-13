@@ -1,15 +1,11 @@
 ﻿using System;
 
-namespace EGamePlay
-{
+namespace EGamePlay {
     [EnableUpdate]
-    public class UpdateComponent : Component
-    {
+    public class UpdateComponent : Component {
         public override bool Enable { get; set; } = true;
 
-
-        public override void Update()
-        {
+        public override void Update() {
             Entity.Update();
         }
     }

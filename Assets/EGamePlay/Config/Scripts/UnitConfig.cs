@@ -1,18 +1,15 @@
-namespace ET
-{
-	[Config]
-	public partial class UnitConfigCategory : ACategory<UnitConfig>
-	{
-		public static UnitConfigCategory Instance;
-		public UnitConfigCategory()
-		{
-			Instance = this;
-		}
-	}
+namespace ET {
+    [Config]
+    public partial class UnitConfigCategory : ACategory<UnitConfig> {
+        public static UnitConfigCategory Instance;
 
-	public partial class UnitConfig: IConfig
-	{
-		public int Id { get; set; }
-		public string Name;
-	}
+        public UnitConfigCategory() {
+            Instance = this;
+        }
+    }
+
+    public partial class UnitConfig : IConfig {
+        public int Id { get; set; }
+        public string Name;
+    }
 }

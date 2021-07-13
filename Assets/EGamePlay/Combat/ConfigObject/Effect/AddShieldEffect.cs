@@ -1,6 +1,4 @@
-﻿
-namespace EGamePlay.Combat
-{
+﻿namespace EGamePlay.Combat {
     //[Effect("添加护盾", 60)]
     //public class AddShieldEffect : Effect
     //{

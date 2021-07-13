@@ -1,7 +1,5 @@
-﻿namespace ET
-{
-    public enum AwaiterStatus
-    {
+﻿namespace ET {
+    public enum AwaiterStatus {
         /// <summary>The operation has not yet completed.</summary>
         Pending = 0,
 

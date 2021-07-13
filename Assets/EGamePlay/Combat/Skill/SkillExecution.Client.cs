@@ -8,10 +8,8 @@ using Log = EGamePlay.Log;
 using UnityEngine.Timeline;
 using UnityEngine.Playables;
 
-namespace EGamePlay.Combat.Skill
-{
-    public class AnimationData
-    {
+namespace EGamePlay.Combat.Skill {
+    public class AnimationData {
         public bool HasStart;
         public bool HasEnded;
         public float StartTime;
@@ -20,8 +18,7 @@ namespace EGamePlay.Combat.Skill
         public AnimationClip AnimationClip;
     }
 
-    public class ColliderSpawnData
-    {
+    public class ColliderSpawnData {
         public bool HasStart;
         public ColliderSpawnEmitter ColliderSpawnEmitter;
     }
@@ -29,14 +26,11 @@ namespace EGamePlay.Combat.Skill
     /// <summary>
     /// 技能执行体
     /// </summary>
-    public partial class SkillExecution : AbilityExecution
-    {
+    public partial class SkillExecution : AbilityExecution {
         public List<AnimationData> AnimationDatas { get; set; } = new List<AnimationData>();
         public List<ColliderSpawnData> ColliderSpawnDatas { get; set; } = new List<ColliderSpawnData>();
-        
-        
-        public override void Awake(object initData)
-        {
+
+        public override void Awake(object initData) {
             base.Awake(initData);
 
             SkillExecutionAsset = Resources.Load<GameObject>($"SkillExecution_{this.SkillAbility.SkillConfig.Id}");
@@ -48,27 +42,21 @@ namespace EGamePlay.Combat.Skill
                 return;
 
             var markers = timelineAsset.markerTrack.GetMarkers();
-            foreach (var item in markers)
-            {
-                if (item is ColliderSpawnEmitter colliderSpawnEmitter)
-                {
-                    ColliderSpawnDatas.Add(new ColliderSpawnData() { ColliderSpawnEmitter = colliderSpawnEmitter });
+            foreach (var item in markers) {
+                if (item is ColliderSpawnEmitter colliderSpawnEmitter) {
+                    ColliderSpawnDatas.Add(new ColliderSpawnData() {ColliderSpawnEmitter = colliderSpawnEmitter});
                 }
             }
 
             var rootTracks = timelineAsset.GetRootTracks();
-            foreach (var item in rootTracks)
-            {
-                if (item.hasClips)
-                {
+            foreach (var item in rootTracks) {
+                if (item.hasClips) {
                     var clips = item.GetClips();
-                    foreach (var clip in clips)
-                    {
-                        if (clip.animationClip != null)
-                        {
+                    foreach (var clip in clips) {
+                        if (clip.animationClip != null) {
                             var animationData = new AnimationData();
-                            animationData.StartTime = (float)clip.clipIn;
-                            animationData.Duration = (float)clip.duration;
+                            animationData.StartTime = (float) clip.clipIn;
+                            animationData.Duration = (float) clip.duration;
                             animationData.EndTime = animationData.StartTime + animationData.Duration;
                             animationData.AnimationClip = clip.animationClip;
                             AnimationDatas.Add(animationData);
@@ -80,20 +68,15 @@ namespace EGamePlay.Combat.Skill
             OriginTime = ET.TimeHelper.Now();
         }
 
-        public override void Update()
-        {
-            if (SkillAbility.Spelling == false)
-            {
+        public override void Update() {
+            if (SkillAbility.Spelling == false) {
                 return;
             }
 
-            var nowSeconds = (double)(ET.TimeHelper.Now() - OriginTime) / 1000;
-            foreach (var item in ColliderSpawnDatas)
-            {
-                if (item.HasStart == false)
-                {
-                    if (nowSeconds >= item.ColliderSpawnEmitter.time)
-                    {
+            var nowSeconds = (double) (ET.TimeHelper.Now() - OriginTime) / 1000;
+            foreach (var item in ColliderSpawnDatas) {
+                if (item.HasStart == false) {
+                    if (nowSeconds >= item.ColliderSpawnEmitter.time) {
                         item.HasStart = true;
                         SpawnCollider(item.ColliderSpawnEmitter);
                     }
@@ -101,39 +84,31 @@ namespace EGamePlay.Combat.Skill
             }
 
             var allAnimationEnded = true;
-            foreach (var item in AnimationDatas)
-            {
-                if (item.HasStart == false)
-                {
+            foreach (var item in AnimationDatas) {
+                if (item.HasStart == false) {
                     allAnimationEnded = false;
-                    if (nowSeconds >= item.StartTime)
-                    {
+                    if (nowSeconds >= item.StartTime) {
                         item.HasStart = true;
                         OwnerEntity.Publish(item.AnimationClip);
                     }
                 }
-                else
-                {
-                    if (item.HasEnded == false)
-                    {
+                else {
+                    if (item.HasEnded == false) {
                         allAnimationEnded = false;
-                        if (nowSeconds >= item.EndTime)
-                        {
+                        if (nowSeconds >= item.EndTime) {
                             item.HasEnded = true;
                         }
                     }
                 }
             }
-            if (allAnimationEnded)
-            {
+
+            if (allAnimationEnded) {
                 EndExecute();
             }
         }
 
-        private void SpawnCollider(ColliderSpawnEmitter colliderSpawnEmitter)
-        {
-            if (colliderSpawnEmitter.ColliderType == ColliderType.TargetFly)
-            {
+        private void SpawnCollider(ColliderSpawnEmitter colliderSpawnEmitter) {
+            if (colliderSpawnEmitter.ColliderType == ColliderType.TargetFly) {
                 var taskData = new CastTargetFlyProjectileTaskData();
                 taskData.FlyTime = 0.3f;
                 taskData.TargetEntity = InputTarget;
@@ -143,8 +118,8 @@ namespace EGamePlay.Combat.Skill
                 task.OnEnterCallback = () => { AbilityEntity.ApplyAbilityEffectsTo(InputTarget); };
                 task.ExecuteTaskAsync().Coroutine();
             }
-            if (colliderSpawnEmitter.ColliderType == ColliderType.ForwardFly)
-            {
+
+            if (colliderSpawnEmitter.ColliderType == ColliderType.ForwardFly) {
                 var taskData = new CastDirectFlyProjectileTaskData();
                 var prefab = SkillExecutionAsset.transform.Find(colliderSpawnEmitter.ColliderName);
                 //var prefab = GetChildByName(SkillExecutionAsset.transform, colliderSpawnEmitter.ColliderName);
@@ -160,13 +135,13 @@ namespace EGamePlay.Combat.Skill
                 task.AddComponent<UpdateComponent>();
                 task.ExecuteTaskAsync().Coroutine();
             }
-            if (colliderSpawnEmitter.ColliderType == ColliderType.FixedPosition)
-            {
+
+            if (colliderSpawnEmitter.ColliderType == ColliderType.FixedPosition) {
                 var taskData = new CreateColliderTaskData();
                 taskData.Position = InputPoint;
                 var prefab = SkillExecutionAsset.transform.Find(colliderSpawnEmitter.ColliderName);
                 taskData.ColliderPrefab = prefab.gameObject;
-                taskData.LifeTime = (int)(colliderSpawnEmitter.ExistTime * 1000);
+                taskData.LifeTime = (int) (colliderSpawnEmitter.ExistTime * 1000);
                 taskData.OnTriggerEnterCallback = (other) => {
                     var combatEntity = CombatContext.Instance.GameObject2Entitys[other.gameObject];
                     AbilityEntity.ApplyAbilityEffectsTo(combatEntity);
@@ -174,14 +149,14 @@ namespace EGamePlay.Combat.Skill
                 var task = Entity.CreateWithParent<CreateColliderTask>(this, taskData);
                 task.ExecuteTaskAsync().Coroutine();
             }
-            if (colliderSpawnEmitter.ColliderType == ColliderType.FixedDirection)
-            {
+
+            if (colliderSpawnEmitter.ColliderType == ColliderType.FixedDirection) {
                 var taskData = new CreateColliderTaskData();
                 taskData.Position = OwnerEntity.Position;
                 taskData.Direction = OwnerEntity.Direction;
                 var prefab = SkillExecutionAsset.transform.Find(colliderSpawnEmitter.ColliderName);
                 taskData.ColliderPrefab = prefab.gameObject;
-                taskData.LifeTime = (int)(colliderSpawnEmitter.ExistTime * 1000);
+                taskData.LifeTime = (int) (colliderSpawnEmitter.ExistTime * 1000);
                 taskData.OnTriggerEnterCallback = (other) => {
                     var combatEntity = CombatContext.Instance.GameObject2Entitys[other.gameObject];
                     AbilityEntity.ApplyAbilityEffectsTo(combatEntity);
@@ -191,8 +166,7 @@ namespace EGamePlay.Combat.Skill
             }
         }
 
-        public override void BeginExecute()
-        {
+        public override void BeginExecute() {
             GetParent<CombatEntity>().CurrentSkillExecution = this;
             SkillAbility.Spelling = true;
 
@@ -202,12 +176,11 @@ namespace EGamePlay.Combat.Skill
             if (timelineAsset == null)
                 return;
             var skillExecutionObj = GameObject.Instantiate(SkillExecutionAsset, OwnerEntity.Position, Quaternion.Euler(0, OwnerEntity.Direction, 0));
-            GameObject.Destroy(skillExecutionObj, (float)timelineAsset.duration);
+            GameObject.Destroy(skillExecutionObj, (float) timelineAsset.duration);
             base.BeginExecute();
         }
 
-        public override void EndExecute()
-        {
+        public override void EndExecute() {
             GetParent<CombatEntity>().CurrentSkillExecution = null;
             SkillAbility.Spelling = false;
             SkillTargets.Clear();

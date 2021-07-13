@@ -1,6 +1,4 @@
-﻿
-namespace EGamePlay.Combat
-{
+﻿namespace EGamePlay.Combat {
     //[Effect("标记叠加", 70)]
     //public class StackTagEffect : Effect
     //{

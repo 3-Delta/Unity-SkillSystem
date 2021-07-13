@@ -5,57 +5,44 @@ using EGamePlay;
 using EGamePlay.Combat.Skill;
 using ET;
 
-namespace EGamePlay.Combat
-{
-    public class SpellActionAbility : ActionAbility<SpellAction>
-    {
-
-    }
+namespace EGamePlay.Combat {
+    public class SpellActionAbility : ActionAbility<SpellAction> { }
 
     /// <summary>
     /// 施法行动
     /// </summary>
-    public class SpellAction : ActionExecution<SpellActionAbility>
-    {
+    public class SpellAction : ActionExecution<SpellActionAbility> {
         public SkillAbility SkillAbility { get; set; }
         public SkillExecution SkillExecution { get; set; }
         public List<CombatEntity> SkillTargets { get; set; } = new List<CombatEntity>();
         public Vector3 InputPoint { get; set; }
         public float InputDirection { get; set; }
 
-
         //前置处理
-        private void PreProcess()
-        {
+        private void PreProcess() {
             Creator.TriggerActionPoint(ActionPointType.PreSpell, this);
         }
 
-        public void SpellSkill()
-        {
+        public void SpellSkill() {
             PreProcess();
-            if (SkillExecution == null)
-            {
+            if (SkillExecution == null) {
                 SkillAbility.ApplyAbilityEffectsTo(Target);
                 PostProcess();
                 ApplyAction();
             }
-            else
-            {
-                if (SkillTargets.Count > 0)
-                {
+            else {
+                if (SkillTargets.Count > 0) {
                     SkillExecution.SkillTargets.AddRange(SkillTargets);
                 }
+
                 SkillExecution.BeginExecute();
                 AddComponent<UpdateComponent>();
             }
         }
 
-        public override void Update()
-        {
-            if (SkillExecution != null)
-            {
-                if (SkillExecution.IsDisposed)
-                {
+        public override void Update() {
+            if (SkillExecution != null) {
+                if (SkillExecution.IsDisposed) {
                     PostProcess();
                     ApplyAction();
                 }
@@ -63,8 +50,7 @@ namespace EGamePlay.Combat
         }
 
         //后置处理
-        private void PostProcess()
-        {
+        private void PostProcess() {
             Creator.TriggerActionPoint(ActionPointType.PostSpell, this);
         }
     }

@@ -11,7 +11,7 @@ using Sirenix.OdinInspector;
 //        [SerializeField]
 //        [LabelText("应用效果")]
 //        public uint EffectIndex;
-        
+
 //        /// <summary>
 //        /// GameObject in the scene to control, or the parent of the instantiated prefab.
 //        /// </summary>
@@ -22,7 +22,6 @@ using Sirenix.OdinInspector;
 
 //        public override double duration { get; }
 //        public ClipCaps clipCaps { get; }
-
 
 //        public SkillPlayableAsset()
 //        {
@@ -44,7 +43,7 @@ using Sirenix.OdinInspector;
 
 //        public void GatherProperties(PlayableDirector director, IPropertyCollector driver)
 //        {
-            
+
 //        }
 //    }
 //}

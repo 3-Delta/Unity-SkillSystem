@@ -1,19 +1,15 @@
 using System;
 using UnityEditor;
 
-namespace ET
-{
+namespace ET {
     [TypeDrawer]
-    public class LongTypeDrawer: ITypeDrawer
-    {
+    public class LongTypeDrawer : ITypeDrawer {
         [TypeDrawer]
-        public bool HandlesType(Type type)
-        {
-            return type == typeof (long);
+        public bool HandlesType(Type type) {
+            return type == typeof(long);
         }
 
-        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target)
-        {
+        public object DrawAndGetNewValue(Type memberType, string memberName, object value, object target) {
             return EditorGUILayout.LongField(memberName, (long) value);
         }
     }

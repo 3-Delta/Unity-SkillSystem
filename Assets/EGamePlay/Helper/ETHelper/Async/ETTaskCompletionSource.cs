@@ -3,44 +3,34 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
-namespace ET
-{
-    public class ETTaskCompletionSource: ICriticalNotifyCompletion
-    {
+namespace ET {
+    public class ETTaskCompletionSource : ICriticalNotifyCompletion {
         private AwaiterStatus state;
         private ExceptionDispatchInfo exception;
         private Action continuation; // action or list
 
-        [DebuggerHidden]
-        public ETTask Task => new ETTask(this);
+        [DebuggerHidden] public ETTask Task => new ETTask(this);
+
+        [DebuggerHidden] public AwaiterStatus Status => state;
+
+        [DebuggerHidden] public bool IsCompleted => state != AwaiterStatus.Pending;
 
         [DebuggerHidden]
-        public AwaiterStatus Status => state;
-
-        [DebuggerHidden]
-        public bool IsCompleted => state != AwaiterStatus.Pending;
-
-        [DebuggerHidden]
-        public void UnsafeOnCompleted(Action action)
-        {
+        public void UnsafeOnCompleted(Action action) {
             this.continuation = action;
-            if (state != AwaiterStatus.Pending)
-            {
+            if (state != AwaiterStatus.Pending) {
                 TryInvokeContinuation();
             }
         }
 
         [DebuggerHidden]
-        public void OnCompleted(Action action)
-        {
+        public void OnCompleted(Action action) {
             this.UnsafeOnCompleted(action);
         }
 
         [DebuggerHidden]
-        public void GetResult()
-        {
-            switch (this.state)
-            {
+        public void GetResult() {
+            switch (this.state) {
                 case AwaiterStatus.Succeeded:
                     return;
                 case AwaiterStatus.Faulted:
@@ -53,10 +43,8 @@ namespace ET
         }
 
         [DebuggerHidden]
-        public void SetResult()
-        {
-            if (this.TrySetResult())
-            {
+        public void SetResult() {
+            if (this.TrySetResult()) {
                 return;
             }
 
@@ -64,10 +52,8 @@ namespace ET
         }
 
         [DebuggerHidden]
-        public void SetException(Exception e)
-        {
-            if (this.TrySetException(e))
-            {
+        public void SetException(Exception e) {
+            if (this.TrySetException(e)) {
                 return;
             }
 
@@ -75,17 +61,14 @@ namespace ET
         }
 
         [DebuggerHidden]
-        private void TryInvokeContinuation()
-        {
+        private void TryInvokeContinuation() {
             this.continuation?.Invoke();
             this.continuation = null;
         }
 
         [DebuggerHidden]
-        private bool TrySetResult()
-        {
-            if (this.state != AwaiterStatus.Pending)
-            {
+        private bool TrySetResult() {
+            if (this.state != AwaiterStatus.Pending) {
                 return false;
             }
 
@@ -96,10 +79,8 @@ namespace ET
         }
 
         [DebuggerHidden]
-        private bool TrySetException(Exception e)
-        {
-            if (this.state != AwaiterStatus.Pending)
-            {
+        private bool TrySetException(Exception e) {
+            if (this.state != AwaiterStatus.Pending) {
                 return false;
             }
 
@@ -111,27 +92,22 @@ namespace ET
         }
     }
 
-    public class ETTaskCompletionSource<T>: ICriticalNotifyCompletion
-    {
+    public class ETTaskCompletionSource<T> : ICriticalNotifyCompletion {
         private AwaiterStatus state;
         private T value;
         private ExceptionDispatchInfo exception;
         private Action continuation; // action or list
 
-        [DebuggerHidden]
-        public ETTask<T> Task => new ETTask<T>(this);
+        [DebuggerHidden] public ETTask<T> Task => new ETTask<T>(this);
 
         [DebuggerHidden]
-        public ETTaskCompletionSource<T> GetAwaiter()
-        {
+        public ETTaskCompletionSource<T> GetAwaiter() {
             return this;
         }
 
         [DebuggerHidden]
-        public T GetResult()
-        {
-            switch (this.state)
-            {
+        public T GetResult() {
+            switch (this.state) {
                 case AwaiterStatus.Succeeded:
                     return this.value;
                 case AwaiterStatus.Faulted:
@@ -143,33 +119,26 @@ namespace ET
             }
         }
 
-        [DebuggerHidden]
-        public bool IsCompleted => state != AwaiterStatus.Pending;
+        [DebuggerHidden] public bool IsCompleted => state != AwaiterStatus.Pending;
+
+        [DebuggerHidden] public AwaiterStatus Status => state;
 
         [DebuggerHidden]
-        public AwaiterStatus Status => state;
-
-        [DebuggerHidden]
-        public void UnsafeOnCompleted(Action action)
-        {
+        public void UnsafeOnCompleted(Action action) {
             this.continuation = action;
-            if (state != AwaiterStatus.Pending)
-            {
+            if (state != AwaiterStatus.Pending) {
                 TryInvokeContinuation();
             }
         }
 
         [DebuggerHidden]
-        public void OnCompleted(Action action)
-        {
+        public void OnCompleted(Action action) {
             this.UnsafeOnCompleted(action);
         }
 
         [DebuggerHidden]
-        public void SetResult(T result)
-        {
-            if (this.TrySetResult(result))
-            {
+        public void SetResult(T result) {
+            if (this.TrySetResult(result)) {
                 return;
             }
 
@@ -177,10 +146,8 @@ namespace ET
         }
 
         [DebuggerHidden]
-        public void SetException(Exception e)
-        {
-            if (this.TrySetException(e))
-            {
+        public void SetException(Exception e) {
+            if (this.TrySetException(e)) {
                 return;
             }
 
@@ -188,17 +155,14 @@ namespace ET
         }
 
         [DebuggerHidden]
-        private void TryInvokeContinuation()
-        {
+        private void TryInvokeContinuation() {
             this.continuation?.Invoke();
             this.continuation = null;
         }
 
         [DebuggerHidden]
-        private bool TrySetResult(T result)
-        {
-            if (this.state != AwaiterStatus.Pending)
-            {
+        private bool TrySetResult(T result) {
+            if (this.state != AwaiterStatus.Pending) {
                 return false;
             }
 
@@ -210,10 +174,8 @@ namespace ET
         }
 
         [DebuggerHidden]
-        private bool TrySetException(Exception e)
-        {
-            if (this.state != AwaiterStatus.Pending)
-            {
+        private bool TrySetException(Exception e) {
+            if (this.state != AwaiterStatus.Pending) {
                 return false;
             }
 

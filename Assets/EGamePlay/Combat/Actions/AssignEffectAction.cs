@@ -6,44 +6,29 @@ using EGamePlay.Combat.Ability;
 using EGamePlay.Combat.Status;
 using EGamePlay.Combat.Skill;
 
-namespace EGamePlay.Combat
-{
-    public class AssignEffectActionAbility : ActionAbility<AssignEffectAction>
-    {
-
-    }
+namespace EGamePlay.Combat {
+    public class AssignEffectActionAbility : ActionAbility<AssignEffectAction> { }
 
     /// <summary>
-    /// ¸³¸øÐ§¹ûÐÐ¶¯
+    /// ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Ð¶ï¿½
     /// </summary>
-    public class AssignEffectAction : ActionExecution<AssignEffectActionAbility>
-    {
-        //´´½¨Õâ¸ö¸³¸øÐ§¹ûÐÐ¶¯µÄÔ´ÄÜÁ¦
+    public class AssignEffectAction : ActionExecution<AssignEffectActionAbility> {
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½
         public AbilityEntity SourceAbility { get; set; }
         public Effect Effect { get; set; }
         public StatusAbility Status { get; set; }
 
+        //Ç°ï¿½Ã´ï¿½ï¿½ï¿½
+        private void PreProcess() { }
 
-        //Ç°ÖÃ´¦Àí
-        private void PreProcess()
-        {
-
-        }
-
-        public void ApplyAssignEffect()
-        {
+        public void ApplyAssignEffect() {
             PreProcess();
-            if (Effect is DamageEffect damageEffect)
-            {
+            if (Effect is DamageEffect damageEffect) { }
 
-            }
-            if (Effect is AddStatusEffect addStatusEffect)
-            {
+            if (Effect is AddStatusEffect addStatusEffect) {
                 var statusConfig = addStatusEffect.AddStatus;
-                if (statusConfig.CanStack == false)
-                {
-                    if (Target.HasStatus(statusConfig.ID))
-                    {
+                if (statusConfig.CanStack == false) {
+                    if (Target.HasStatus(statusConfig.ID)) {
                         var status = Target.GetStatus(statusConfig.ID);
                         var statusLifeTimer = status.GetComponent<StatusLifeTimeComponent>().LifeTimer;
                         statusLifeTimer.MaxTime = addStatusEffect.Duration / 1000f;
@@ -51,30 +36,29 @@ namespace EGamePlay.Combat
                         return;
                     }
                 }
+
                 Status = Target.AttachStatus<StatusAbility>(statusConfig);
                 Status.Caster = Creator;
                 Status.Level = SourceAbility.Level;
                 Status.AddComponent<StatusLifeTimeComponent>();
                 Status.TryActivateAbility();
             }
+
             PostProcess();
 
             ApplyAction();
         }
 
-        //ºóÖÃ´¦Àí
-        private void PostProcess()
-        {
-            if (Effect is AddStatusEffect addStatusEffect)
-            {
+        //ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½
+        private void PostProcess() {
+            if (Effect is AddStatusEffect addStatusEffect) {
                 Creator.TriggerActionPoint(ActionPointType.PostGiveStatus, this);
                 Target.TriggerActionPoint(ActionPointType.PostReceiveStatus, this);
             }
         }
     }
 
-    public enum EffectType
-    {
+    public enum EffectType {
         DamageAffect = 1,
         NumericModify = 2,
         StatusAttach = 3,

@@ -1,8 +1,68 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Framework.Combat {
-    #region Numeric
+    public class RangeNumeric<T> where T : struct {
+        public T Min { get; }
+        public T Max { get; }
 
+        protected T _value;
+        public virtual T Value { get; set; }
+
+        public RangeNumeric(T min, T max, T target) {
+            this.Min = min;
+            this.Max = max;
+            this._value = target;
+        }
+
+        public virtual float Percent { get; }
+        public virtual bool IsPercentFull { get; }
+    }
+
+    public class IntRangeNumeric : RangeNumeric<int> {
+        public override int Value {
+            get {
+                _value = Math.Min(Min, _value);
+                _value = Math.Max(Max, _value);
+                return _value;
+            }
+            set => _value = value;
+        }
+
+        public IntRangeNumeric(int min, int max, int target) : base(min, max, target) { }
+
+        public override float Percent {
+            get { return 1f * Value / Max; }
+        }
+
+        public override bool IsPercentFull {
+            get { return Percent >= 0; }
+        }
+    }
+
+    public class FloatRangeNumeric : RangeNumeric<float> {
+        public override float Value {
+            get {
+                _value = Mathf.Min(Min, _value);
+                _value = Mathf.Max(Max, _value);
+                return _value;
+            }
+            set => _value = value;
+        }
+
+        public FloatRangeNumeric(float min, float max, float target) : base(min, max, target) { }
+
+        public override float Percent {
+            get { return 1f * Value / Max; }
+        }
+
+        public override bool IsPercentFull {
+            get { return Percent >= 0; }
+        }
+    }
+
+    #region Numeric
     public class Numeric<T, TModifier, TModifierCollection>
         where T : struct
         where TModifier : NumericModifier<T>
@@ -10,7 +70,6 @@ namespace Framework.Combat {
         protected bool dirty = false;
 
         #region 最终值
-
         protected T _finalValue = default;
 
         public T FinalValue {
@@ -22,33 +81,26 @@ namespace Framework.Combat {
                 return _finalValue;
             }
         }
-
         #endregion
 
         #region 基础值
-
         public T baseValue { get; protected set; }
-
         #endregion
 
         #region 装备/武器/伙伴/符文等添加的固定数值
-
         public T fixedAdd { get; protected set; }
         public int fixedAddPercent { get; protected set; }
 
         protected TModifierCollection fixedAddCollection { get; } = new TModifierCollection();
         protected IntModifierCollection fixedAddPercentCollection { get; } = new IntModifierCollection();
-
         #endregion
 
         #region buff等添加的动态数值
-
         public T dynamicAdd { get; protected set; }
         public int dynamicAddPercent { get; protected set; }
 
         protected TModifierCollection dynamicAddCollection { get; } = new TModifierCollection();
         protected IntModifierCollection dynamicAddPercentCollection { get; } = new IntModifierCollection();
-
         #endregion
 
         public void Reset() {
@@ -100,8 +152,7 @@ namespace Framework.Combat {
             dirty = true;
         }
 
-        protected virtual void Calc() {
-        }
+        protected virtual void Calc() { }
     }
 
     public class IntNumeric : Numeric<int, IntModifier, IntModifierCollection> {
@@ -121,25 +172,19 @@ namespace Framework.Combat {
             _finalValue = (float) value3;
         }
     }
-
     #endregion
 
     #region NumericModifier
-
     public class NumericModifier<T> where T : struct {
         public T Value { get; set; }
     }
 
-    public class IntModifier : NumericModifier<int> {
-    }
+    public class IntModifier : NumericModifier<int> { }
 
-    public class FloatModifier : NumericModifier<float> {
-    }
-
+    public class FloatModifier : NumericModifier<float> { }
     #endregion
 
     #region NumericModifierCollection
-
     public class NumericModifierCollection<T, TModifier>
         where T : struct
         where TModifier : NumericModifier<T> {
@@ -186,6 +231,5 @@ namespace Framework.Combat {
             }
         }
     }
-
     #endregion
 }

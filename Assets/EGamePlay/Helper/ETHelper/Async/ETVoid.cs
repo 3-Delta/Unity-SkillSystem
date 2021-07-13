@@ -2,27 +2,18 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace ET
-{
-    [AsyncMethodBuilder(typeof (AsyncETVoidMethodBuilder))]
-    public struct ETVoid: ICriticalNotifyCompletion
-    {
+namespace ET {
+    [AsyncMethodBuilder(typeof(AsyncETVoidMethodBuilder))]
+    public struct ETVoid : ICriticalNotifyCompletion {
         [DebuggerHidden]
-        public void Coroutine()
-        {
-        }
+        public void Coroutine() { }
+
+        [DebuggerHidden] public bool IsCompleted => true;
 
         [DebuggerHidden]
-        public bool IsCompleted => true;
+        public void OnCompleted(Action continuation) { }
 
         [DebuggerHidden]
-        public void OnCompleted(Action continuation)
-        {
-        }
-
-        [DebuggerHidden]
-        public void UnsafeOnCompleted(Action continuation)
-        {
-        }
+        public void UnsafeOnCompleted(Action continuation) { }
     }
 }
