@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Framework {
     public class EventHandler {
@@ -47,6 +48,22 @@ namespace Framework {
             }
         }
 
+        #region Tuple
+
+        public void Invoke<TArg1, TArg2, TArg3, TArg4, TArg5>(Tuple<TArg1, TArg2, TArg3, TArg4, TArg5> arg) {
+            for (int i = ls.Count - 1; i >= 0; i--) {
+                (ls[i] as Action<Tuple<TArg1, TArg2, TArg3, TArg4, TArg5>>)?.Invoke(arg);
+            }
+        }
+
+        public void Invoke(ITuple arg) {
+            for (int i = ls.Count - 1; i >= 0; i--) {
+                (ls[i] as Action<ITuple>)?.Invoke(arg);
+            }
+        }
+
+        #endregion
+
         public void Clear() {
             ls.Clear();
         }
@@ -83,7 +100,8 @@ namespace Framework {
             _Register(eventType, action, toReigster);
         }
 
-        public void Register<TArg1, TArg2, TArg3>(TEnum eventType, Action<TArg1, TArg2, TArg3> action, bool toReigster) {
+        public void Register<TArg1, TArg2, TArg3>(TEnum eventType, Action<TArg1, TArg2, TArg3> action,
+            bool toReigster) {
             _Register(eventType, action, toReigster);
         }
 
@@ -110,6 +128,32 @@ namespace Framework {
                 handler?.Invoke(arg1, arg2, arg3);
             }
         }
+
+        #region Tuple
+
+        public void Register(TEnum eventType, Action<ITuple> action, bool toReigster) {
+            _Register(eventType, action, toReigster);
+        }
+
+        public void Invoke(TEnum eventType, ITuple arg) {
+            if (_delegates.TryGetValue(eventType, out var handler)) {
+                handler?.Invoke(arg);
+            }
+        }
+
+        public void Invoke<TArg1, TArg2, TArg3, TArg4, TArg5>(TEnum eventType,
+            Tuple<TArg1, TArg2, TArg3, TArg4, TArg5> arg) {
+            if (_delegates.TryGetValue(eventType, out var handler)) {
+                handler?.Invoke(arg);
+            }
+        }
+
+        public void Register<TArg1, TArg2, TArg3, TArg4, TArg5>(TEnum eventType,
+            Action<Tuple<TArg1, TArg2, TArg3, TArg4, TArg5>> action, bool toReigster) {
+            _Register(eventType, action, toReigster);
+        }
+
+        #endregion
 
         public void Clear() {
             _delegates.Clear();
