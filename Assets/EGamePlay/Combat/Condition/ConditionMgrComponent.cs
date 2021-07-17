@@ -7,11 +7,7 @@ namespace EGamePlay.Combat {
     /// </summary>
     public sealed class ConditionMgrComponent : Component {
         private Dictionary<Action, ConditionEntity> Conditions { get; set; } = new Dictionary<Action, ConditionEntity>();
-
-        public override void Setup() {
-            base.Setup();
-        }
-
+        
         public void AddListener(ConditionType conditionType, Action action, object paramObj = null) {
             switch (conditionType) {
                 case ConditionType.WhenInTimeNoDamage:
