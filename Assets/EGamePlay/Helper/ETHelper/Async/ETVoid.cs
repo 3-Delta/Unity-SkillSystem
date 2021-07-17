@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace ET {
+    // 学习资源 https://www.cnblogs.com/raytheweak/p/9130594.html
     [AsyncMethodBuilder(typeof(AsyncETVoidMethodBuilder))]
     public struct ETVoid : ICriticalNotifyCompletion {
         [DebuggerHidden]
