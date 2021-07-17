@@ -18,7 +18,7 @@ namespace ET {
         // 3. SetException
         [DebuggerHidden]
         public void SetException(Exception exception) {
-            Log.Error(exception);
+            Log.Error(exception); 
         }
 
         // 4. SetResult
