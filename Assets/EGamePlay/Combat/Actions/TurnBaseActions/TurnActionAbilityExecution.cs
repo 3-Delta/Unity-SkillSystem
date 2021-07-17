@@ -6,12 +6,12 @@ using EGamePlay.Combat;
 using ET;
 
 namespace EGamePlay.Combat {
-    public class TurnActionAbilityEntity : ActionAbilityEntity<TurnActionAbility> { }
+    public class TurnActionAbilityEntity : ActionAbilityEntity<TurnActionAbilityExecution> { }
 
     /// <summary>
     /// 回合行动
     /// </summary>
-    public class TurnActionAbility : ActionAbilityExecution<TurnActionAbilityEntity> {
+    public class TurnActionAbilityExecution : ActionAbilityExecution<TurnActionAbilityEntity> {
         public int TurnActionType { get; set; }
 
         //前置处理

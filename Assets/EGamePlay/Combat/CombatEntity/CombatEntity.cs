@@ -15,6 +15,8 @@ namespace EGamePlay.Combat {
         public HealthPoint CurrentHealth { get; private set; } = new HealthPoint();
 
         public Dictionary<Type, ActionAbilityEntity> TypeActions { get; set; } = new Dictionary<Type, ActionAbilityEntity>();
+        
+        #region 刚好是Actions/下面的8个ActionExecution
         public SpellActionAbilityEntity SpellActionAbilityEntity { get; private set; }
         public MotionActionAbilityEntity MotionActionAbilityEntity { get; private set; }
         public DamageActionAbilityEntity DamageActionAbilityEntity { get; private set; }
@@ -23,8 +25,9 @@ namespace EGamePlay.Combat {
         public AssignEffectActionAbilityEntity AssignEffectActionAbilityEntity { get; private set; }
         public TurnActionAbilityEntity TurnActionAbilityEntity { get; private set; }
         public JumpToActionAbilityEntity JumpToActionAbilityEntity { get; private set; }
+        #endregion
 
-        public AttackAbility AttackAbility { get; set; }
+        public AttackAbilityEntity AttackAbilityEntity { get; set; }
         public SkillExecution CurrentSkillExecution { get; set; }
         public Dictionary<string, SkillAbility> NameSkills { get; set; } = new Dictionary<string, SkillAbility>();
         public Dictionary<KeyCode, SkillAbility> InputSkills { get; set; } = new Dictionary<KeyCode, SkillAbility>();
@@ -38,7 +41,7 @@ namespace EGamePlay.Combat {
         public override void Awake() {
             AddComponent<AttributeComponent>();
             AddComponent<ActionPointManageComponent>();
-            AddComponent<ConditionManageComponent>();
+            AddComponent<ConditionMgrComponent>();
             //AddComponent<MotionComponent>();
             CurrentHealth.SetMaxValue((int) GetComponent<AttributeComponent>().HealthPoint.Value);
             CurrentHealth.Reset();
@@ -50,7 +53,7 @@ namespace EGamePlay.Combat {
             AssignEffectActionAbilityEntity = AttachActionAbility<AssignEffectActionAbilityEntity>();
             TurnActionAbilityEntity = AttachActionAbility<TurnActionAbilityEntity>();
             JumpToActionAbilityEntity = AttachActionAbility<JumpToActionAbilityEntity>();
-            AttackAbility = CreateChild<AttackAbility>();
+            AttackAbilityEntity = CreateChild<AttackAbilityEntity>();
         }
 
         /// <summary>
@@ -77,21 +80,21 @@ namespace EGamePlay.Combat {
 
         #region 条件事件
         public void ListenerCondition(ConditionType conditionType, Action action, object paramObj = null) {
-            GetComponent<ConditionManageComponent>().AddListener(conditionType, action, paramObj);
+            GetComponent<ConditionMgrComponent>().AddListener(conditionType, action, paramObj);
         }
 
         public void UnListenCondition(ConditionType conditionType, Action action) {
-            GetComponent<ConditionManageComponent>().RemoveListener(conditionType, action);
+            GetComponent<ConditionMgrComponent>().RemoveListener(conditionType, action);
         }
         #endregion
 
         public void ReceiveDamage(ActionAbilityExecution combatActionAbility) {
-            var damageAction = combatActionAbility as DamageActionAbility;
+            var damageAction = combatActionAbility as DamageActionAbilityExecution;
             CurrentHealth.Minus(damageAction.DamageValue);
         }
 
         public void ReceiveCure(ActionAbilityExecution combatActionAbility) {
-            var cureAction = combatActionAbility as CureActionAbility;
+            var cureAction = combatActionAbility as CureActionAbilityExecution;
             CurrentHealth.Add(cureAction.CureValue);
         }
 

@@ -6,12 +6,12 @@ using EGamePlay.Combat.Skill;
 using ET;
 
 namespace EGamePlay.Combat {
-    public class AttackActionAbilityEntity : ActionAbilityEntity<AttackActionAbility> { }
+    public class AttackActionAbilityEntity : ActionAbilityEntity<AttackActionAbilityExecution> { }
 
     /// <summary>
     /// 普攻行动
     /// </summary>
-    public class AttackActionAbility : ActionAbilityExecution<AttackActionAbilityEntity> {
+    public class AttackActionAbilityExecution : ActionAbilityExecution<AttackActionAbilityEntity> {
         //前置处理
         private void PreProcess() {
             Creator.TriggerActionPoint(ActionPointType.PreGiveAttack, this);
@@ -33,8 +33,8 @@ namespace EGamePlay.Combat {
         }
 
         public void ApplyAttack() {
-            var attackExecution = Creator.AttackAbility.CreateExecution();
-            attackExecution.AttackActionAbility = this;
+            var attackExecution = Creator.AttackAbilityEntity.CreateExecution();
+            attackExecution.AttackActionAbilityExecution = this;
             attackExecution.BeginExecute();
         }
 

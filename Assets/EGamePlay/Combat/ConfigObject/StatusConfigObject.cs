@@ -250,10 +250,4 @@ namespace EGamePlay.Combat {
         [LabelText("间隔触发")] Interval = 3,
         [LabelText("在行动点且满足条件")] ActionCondition = 4,
     }
-
-    public enum ConditionType {
-        [LabelText("当x秒内没有受伤")] WhenInTimeNoDamage = 0,
-        [LabelText("当生命值低于x")] WhenHPLower = 1,
-        [LabelText("当生命值低于百分比x")] WhenHPPctLower = 2,
-    }
 }

@@ -27,7 +27,7 @@ namespace EGamePlay.Combat {
         //public GameTimer TurnRoundTimer { get; set; } = new GameTimer(2f);
         public Dictionary<int, CombatEntity> HeroEntities { get; set; } = new Dictionary<int, CombatEntity>();
         public Dictionary<int, CombatEntity> MonsterEntities { get; set; } = new Dictionary<int, CombatEntity>();
-        public List<TurnActionAbility> TurnActions { get; set; } = new List<TurnActionAbility>();
+        public List<TurnActionAbilityExecution> TurnActions { get; set; } = new List<TurnActionAbilityExecution>();
 
         public override void Update() {
             //if (TurnRoundTimer.IsRunning)

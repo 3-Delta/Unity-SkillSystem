@@ -6,9 +6,9 @@ using EGamePlay.Combat;
 using ET;
 
 namespace EGamePlay.Combat {
-    public class JumpToActionAbilityEntity : ActionAbilityEntity<JumpToActionAbility> { }
+    public class JumpToActionAbilityEntity : ActionAbilityEntity<JumpToActionAbilityExecution> { }
 
-    public class JumpToActionAbility : ActionAbilityExecution<JumpToActionAbilityEntity> {
+    public class JumpToActionAbilityExecution : ActionAbilityExecution<JumpToActionAbilityEntity> {
         //前置处理
         private void PreProcess() {
             Creator.TriggerActionPoint(ActionPointType.PreJumpTo, this);
