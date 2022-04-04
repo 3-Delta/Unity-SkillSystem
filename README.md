@@ -3,6 +3,7 @@
 Unity手游技能系统学习
 
 学习：
+0. https://www.supercline.com/game/tool-action/actioneditor.html
 1. https://github.com/m969/EGamePlay
 2. https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools:zh-cn/Scripting:zh-cn/Abilities_Data_Driven:zh-cn
 3. https://www.zhihu.com/question/29545727/answer/786293709 技能是CombatActor的castor对于target施加的瞬间的数值影响,而buff则是一个持续作用的数值变化的作用,装备/符文等施加影响时间更长. 最难的是技能效果, 而不是底层的数值影响.
