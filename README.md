@@ -4,6 +4,9 @@ Unity手游技能系统学习
 
 学习：
 0. https://www.supercline.com/game/tool-action/actioneditor.html
+https://github.com/jewer3330/plato
+https://github.com/huailiang/seqence
+
 1. https://github.com/SuperCLine/actioneditor       
 2. https://github.com/m969/EGamePlay
 3. https://developer.valvesoftware.com/wiki/Dota_2_Workshop_Tools:zh-cn/Scripting:zh-cn/Abilities_Data_Driven:zh-cn
